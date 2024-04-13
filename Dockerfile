@@ -11,7 +11,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    docker.build('myimage')
+                    docker.build('httpd')
                 }
             }
         }
