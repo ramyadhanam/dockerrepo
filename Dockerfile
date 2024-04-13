@@ -1,25 +1,29 @@
 pipeline {
     agent any
+    
     environment {
-        AWS_DEFAULT_REGION = 'ap-south-1'
+        AWS_REGION = 'ap-south-1'
         AWS_ACCOUNT_ID = '270311159384'
         ECR_REPO = 'myrepo'
     }
+    
     stages {
         stage('Build') {
             steps {
-                git 'https://github.com/ramyadhanam/dockerrepo.git'
                 script {
-                    docker.build('your-image-name')
+                    docker.build('myimage')
                 }
             }
         }
+        
         stage('Push to ECR') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'github-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                    sh 'aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com'
-                    sh "docker tag your-image-name:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_REPO:latest"
-                    sh "docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_REPO:latest"
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'aws-credentials', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                        docker.withRegistry("https://${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com", 'ecr') {
+                            docker.image("your-image-name").push("${ECR_REPO}:latest")
+                        }
+                    }
                 }
             }
         }
