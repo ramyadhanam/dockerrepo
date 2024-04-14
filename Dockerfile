@@ -21,7 +21,7 @@ pipeline {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'aws-credentials', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                         docker.withRegistry("https://${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com", 'ecr') {
-                            docker.image("your-image-name").push("${ECR_REPO}:latest")
+                            docker.image("httpd").push("${ECR_REPO}:latest")
                         }
                     }
                 }
