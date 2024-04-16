@@ -1,16 +1,9 @@
-FROM registry.access.redhat.com/ubi8/nodejs-16:latest
-
-# Copy package.json and package-lock.json
-COPY package*.json ./
-
-# Install npm production packages 
-RUN npm install --production
-
-COPY . /opt/app-root/src
-
-ENV NODE_ENV production
-ENV PORT 3000
-
-EXPOSE 3000
-
-CMD ["npm", "start"]
+FROM ubuntu
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update
+RUN apt-get install apache2 -y
+RUN apt-get install apache2-utils -y
+RUN apt-get clean
+EXPOSE 80
+RUN echo "Hello, successfully deployed azure devops with ACI" > /var/www/html/index.html
+CMD ["apache2ctl","-D","FOREGROUND"]
