@@ -1,31 +1,26 @@
-pipeline {
-    agent any
-    
-    environment {
-        AWS_REGION = 'ap-south-1'
-        AWS_ACCOUNT_ID = '270311159384'
-        ECR_REPO = 'myrepo'
-    }
-    
-    stages {
-        stage('Build') {
-            steps {
-                script {
-                    docker.build('httpd')
-                }
-            }
-        }
-        
-        stage('Push to ECR') {
-            steps {
-                script {
-                    withCredentials([usernamePassword(credentialsId: 'aws-credentials', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-                        docker.withRegistry("https://${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com", 'ecr') {
-                            docker.image("httpd").push("${ECR_REPO}:latest")
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
+on:
+  push:
+    branches: [ "master" ]
+  pull-request:
+
+jobs:
+
+  build-push:
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: <username>/<repository>:latest
