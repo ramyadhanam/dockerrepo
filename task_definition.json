@@ -1,9 +1,9 @@
 {
-    "taskDefinitionArn": "arn:aws:ecs:us-east-1:270311159384:task-definition/mytask:5",
+    "taskDefinitionArn": "arn:aws:ecs:ap-south-1:767397901899:task-definition/cluster-task:3",
     "containerDefinitions": [
         {
-            "name": "jenkins",
-            "image": "270311159384.dkr.ecr.ap-south-1.amazonaws.com/myrepo:latest",
+            "name": "httpd",
+            "image": "767397901899.dkr.ecr.ap-south-1.amazonaws.com/myrepo:latest",
             "cpu": 400,
             "memory": 400,
             "memoryReservation": 300,
@@ -22,15 +22,15 @@
                 "logDriver": "awslogs",
                 "options": {
                     "awslogs-group": "ramya",
-                    "awslogs-region": "us-east-1",
+                    "awslogs-region": "ap-south-1",
                     "awslogs-stream-prefix": "ramya"
                 }
             },
             "systemControls": []
         }
     ],
-    "family": "mytask",
-    "taskRoleArn": "arn:aws:iam::270311159384:role/ecsTaskExecutionRole",
+    "family": "cluster-task",
+    "taskRoleArn": "arn:aws:iam::767397901899:role/ecsTaskExecutionRole",
     "networkMode": "bridge",
     "revision": 5,
     "volumes": [],
@@ -61,6 +61,6 @@
         "EXTERNAL"
     ],
     "registeredAt": "2024-04-23T10:56:39.901Z",
-    "registeredBy": "arn:aws:iam::270311159384:root",
+    "registeredBy": "arn:aws:iam::767397901899:root",
     "tags": []
 }
